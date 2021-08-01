@@ -1,13 +1,14 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <div id="container" style="height: 600px"></div>
 <center>
-    <button onclick="window.location.href='index2.html'">
-        得票增长数
+    <button onclick="window.location.href='index.html'">
+        得票总数
     </button>
 </center>
 <script>
     let chart; // global
 
+    let votes = new Map()
     const name = new Map([
         [1, '丁庆军'],
         [2, '丁文江'],
@@ -463,7 +464,15 @@
 
             yydss.forEach((v, i) => {
                 const n = name.get(v.id)
-                const point = [date, v.voteNum];
+
+                const preVotes = votes.get(v.id)
+                votes.set(v.id,v.voteNum)
+
+                if (preVotes === undefined) {
+                    return
+                }
+
+                const point = [date, v.voteNum - preVotes];
 
                 const series = chart.series.filter(s => {
                     return s.name === n
@@ -504,7 +513,7 @@
                 minPadding: 0.2,
                 maxPadding: 0.2,
                 title: {
-                    text: '得票',
+                    text: '得票增长数',
                     margin: 10
                 }
             },
